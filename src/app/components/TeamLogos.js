@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 const teamLinks = [
   {
@@ -113,7 +114,7 @@ export default function TeamLogos() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img src={team.src} alt={team.alt} className="team-logo" />
+          <Image src={team.src} alt={team.alt} className="team-logo" />
         </a>
       ))}
     </div>
