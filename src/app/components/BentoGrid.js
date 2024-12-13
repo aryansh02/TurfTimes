@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-const API_KEY = process.env.NEXT_PUBLIC_FOOTBALL_NEWS_API_KEY;
 
 export default function BentoGrid() {
   const [articles, setArticles] = useState([]);
@@ -9,6 +8,8 @@ export default function BentoGrid() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const API_KEY = process.env.NEXT_PUBLIC_FOOTBALL_NEWS_API_KEY;
+
     if (!API_KEY) {
       console.error("API key is missing. Check your .env.local file.");
       setLoading(false);
@@ -26,7 +27,12 @@ export default function BentoGrid() {
       const url = `https://newsapi.org/v2/everything?q=premier+league+england+football&language=en&sortBy=publishedAt&apiKey=${API_KEY}`;
 
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: {
+            "User-Agent": "Mozilla/5.0",
+            "Cache-Control": "no-cache",
+          },
+        });
         if (!response.ok) {
           throw new Error(`HTTP ${response.status} - ${response.statusText}`);
         }
@@ -56,7 +62,7 @@ export default function BentoGrid() {
         );
       } catch (err) {
         console.error("Error fetching news:", err);
-        setError(err.message);
+        setError(err.message || "An unexpected error occurred.");
       } finally {
         setLoading(false);
       }
@@ -73,7 +79,11 @@ export default function BentoGrid() {
     );
   }
 
-  if (error) return <p>Error fetching news: {error}</p>;
+  if (error) {
+    return (
+      <p className="text-red-500 text-center">Error fetching news: {error}</p>
+    );
+  }
 
   return (
     <div className="p-8">
@@ -81,9 +91,9 @@ export default function BentoGrid() {
         {articles.map((article, index) => (
           <a
             key={index}
-            href={article.url === "#" ? null : article.url}
-            target={article.url === "#" ? "_self" : "_blank"}
-            rel="noopener noreferrer"
+            href={article.url !== "#" ? article.url : undefined}
+            target={article.url !== "#" ? "_blank" : "_self"}
+            rel={article.url !== "#" ? "noopener noreferrer" : undefined}
             className={`bento-item ${
               index % 6 === 0 ? "large" : index % 3 === 0 ? "medium" : "small"
             }`}
