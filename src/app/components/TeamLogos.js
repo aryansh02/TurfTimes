@@ -113,8 +113,14 @@ export default function TeamLogos() {
           href={team.href}
           target="_blank"
           rel="noopener noreferrer"
+          className="team-logo-link"
         >
-          <Image src={team.src} alt={team.alt} className="team-logo" />
+          <Image
+            src={team.src}
+            alt={team.alt}
+            width={50} // Set logo width to 50px
+            height={50} // Set logo height to 50px
+          />
         </a>
       ))}
     </div>
