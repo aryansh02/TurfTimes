@@ -8,30 +8,10 @@ export default function BentoGrid() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const API_KEY = process.env.NEXT_PUBLIC_FOOTBALL_NEWS_API_KEY;
-
-    if (!API_KEY) {
-      console.error(
-        "API key is missing. Check your .env.local file or Vercel Environment Variables."
-      );
-      setLoading(false);
-      setArticles([
-        {
-          title: "API Key Missing - Using Fallback Data",
-          urlToImage: "https://via.placeholder.com/300",
-          url: "#",
-        },
-      ]);
-      return;
-    }
-
     async function fetchNews() {
-      const url = `https://newsapi.org/v2/everything?q=premier+league+england+football&language=en&sortBy=publishedAt&apiKey=${API_KEY}`;
-
       try {
-        const response = await fetch(url, {
+        const response = await fetch("/api/news", {
           headers: {
-            "User-Agent": "Mozilla/5.0",
             "Cache-Control": "no-cache",
           },
         });
@@ -64,7 +44,7 @@ export default function BentoGrid() {
               ]
         );
       } catch (err) {
-        console.error("Error fetching news:", err);
+        console.error("Error fetching news:", err.message);
         setError(err.message || "An unexpected error occurred.");
       } finally {
         setLoading(false);
