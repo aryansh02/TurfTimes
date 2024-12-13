@@ -11,7 +11,9 @@ export default function BentoGrid() {
     const API_KEY = process.env.NEXT_PUBLIC_FOOTBALL_NEWS_API_KEY;
 
     if (!API_KEY) {
-      console.error("API key is missing. Check your .env.local file.");
+      console.error(
+        "API key is missing. Check your .env.local file or Vercel Environment Variables."
+      );
       setLoading(false);
       setArticles([
         {
@@ -33,6 +35,7 @@ export default function BentoGrid() {
             "Cache-Control": "no-cache",
           },
         });
+
         if (!response.ok) {
           throw new Error(`HTTP ${response.status} - ${response.statusText}`);
         }
